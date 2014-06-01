@@ -7,25 +7,36 @@ var info = {
 var tramiteSelected = null;
 var tramiteSelectedName = null;
 
+$(document).on("mobileinit", function(){
+    $.mobile.buttonMarkup.hoverDelay = 0;
+    $.mobile.defaultPageTransition   = 'none';
+    $.mobile.defaultDialogTransition = 'none';
+});
+
+
 $(document).on('vclick', '#movie-list li', function(){
 
-    //$.mobile.changePage( "#headline", { transition: "slide", changeHash: false });
+    event.preventDefault();
+
     $.mobile.navigate( "#headline" );
+    $.mobile.changePage( "#headline");
 
-
-    $(headlineTitle).text($(this).attr('data-name'));
+    $("#headlineTitle",$.mobile.activePage).text($(this).attr('data-name'));
 
     var idd = $(this).attr('data-id');
 
     info.cat = idd;
     info.page = 0;
 
-    $('#movie-data').empty();
+    $('#movie-data',$.mobile.activePage).empty();
 
     fetchDataFromServer();
+    return false;
 });
 
 $(document).on('vclick', '#movie-data li', function(){
+
+    event.preventDefault();
 
     var idd = $(this).attr('data-id');
     tramiteSelected = idd;
@@ -49,30 +60,32 @@ $(document).on('vclick', '#movie-data li', function(){
 
             var tramite = data.data;
 
-            $("#queEsId").text(tramite.queEs);
+            $("#queEsId",$.mobile.activePage).text(tramite.queEs);
 
             if (tramite.dondeyCuando!=null)
-                $("#dondeYCuandoId").text(tramite.dondeyCuando.otrosDatosUbicacion);
+                $("#dondeYCuandoId",$.mobile.activePage).text(tramite.dondeyCuando.otrosDatosUbicacion);
             else
-                $("#dondeYCuandoId").text("N/A");
+                $("#dondeYCuandoId",$.mobile.activePage).text("N/A");
 
-            $("#requisitos").text(tramite.requisitos);
+            $("#requisitos",$.mobile.activePage).text(tramite.requisitos);
 
             if (tramite.tenerEnCuenta!=null && tramite.tenerEnCuenta.costo!=null && tramite.tenerEnCuenta.otrosDatosDeInteres!=null && tramite.tenerEnCuenta.formaDeSolicitarlo!=null){
                 var str = "<b>Costo:</b> " + tramite.tenerEnCuenta.costo + "<br>" +
                 "<b>Otros datos:</b> " + tramite.tenerEnCuenta.otrosDatosDeInteres + "<br>" +
                 "<b>Forma de solicitud:</b> " + tramite.tenerEnCuenta.formaDeSolicitarlo;
 
-                $("#observacionesId").html(str);
+                $("#observacionesId",$.mobile.activePage).html(str);
 
                 var depende = "<b> Area </b> : " + tramite.dependeDe.area + "<br>" +
                               "<b> Organismo </b> : " + tramite.dependeDe.organismo;
 
-                $("#dependeDeId").html(depende);
+                $("#dependeDeId",$.mobile.activePage).html(depende);
             }
             loading = false;
             $.mobile.loading('hide');
     });
+
+    return false;
 });
 
 var fetchDataFromServer = function(){
@@ -96,7 +109,7 @@ var fetchDataFromServer = function(){
 
             info.page = info.page+1;
              //refresh listview
-            $('#movie-data').listview('refresh');
+            $('#movie-data',$.mobile.activePage).listview('refresh');
             loading = false;
             $.mobile.loading('hide');
     });
@@ -125,7 +138,7 @@ var fetchDataFromServerRegExp = function(name){
 
             info.page = info.page+1;
              //refresh listview
-            $('#search-page-list-view').listview('refresh');
+            $('#search-page-list-view',$.mobile.activePage).listview('refresh');
             loading = false;
             $.mobile.loading('hide');
     });
@@ -133,26 +146,29 @@ var fetchDataFromServerRegExp = function(name){
 
 $(window).bind('scrollstart', function () {
 
+  event.preventDefault();
+
   var activePage = $.mobile.activePage.attr("id");
 
   if (activePage!="headline" && activePage!="searchPage")
     return;
-  console.log(activePage);
+
 
   if (isAtBottom()){
     loading = true; //interlock to prevent multiple calls
     $.mobile.loading('show');
 
-    console.log("getting data from server...");
-
     if (activePage=="headline")
         fetchDataFromServer();
     else
-          fetchDataFromServerRegExp(info.text);
+        fetchDataFromServerRegExp(info.text);
     }
+    return false;
 });
 
 $(window).bind('scrollstop', function () {
+  event.preventDefault();
+  return false;
 });
 
 function isAtBottom(){
@@ -163,21 +179,21 @@ function isAtBottom(){
 $(document).ready(function(){
   $("#btnBuscar").click(function() {
 
-    console.log("hola");
-    var name = $("#searchTramite").val();
+    event.preventDefault();
 
-    //$.mobile.changePage( "#searchPage", { transition: "slide", changeHash: false });
+    var name = $("#searchTramite",$.mobile.activePage).val();
+
     $.mobile.navigate( "#searchPage" );
+    $.mobile.changePage( "#searchPage");
 
-    $("#searchPageTitle").text("Resultados para " + name);
+    $("#searchPageTitle",$.mobile.activePage).text("Resultados para " + name);
 
     info.text = name;
     info.page = 0;
 
-    $('#search-page-list-view').empty();
-
+    $('#search-page-list-view',$.mobile.activePage).empty();
     fetchDataFromServerRegExp(name);
-
+    return false;
   });
 
 });
@@ -185,19 +201,18 @@ $(document).ready(function(){
 
 $(document).on('vclick', '#search-page-list-view li', function(){
 
+    event.preventDefault();
+
     var idd = $(this).attr('data-id');
     tramiteSelected = idd;
 
     var name = $(this).attr('data-name');
     tramiteSelectedName = name;
 
-    //$.mobile.changePage( "#tramiteDetail", { transition: "slide", changeHash: false });
-
     $.mobile.navigate( "#tramiteDetail" );
 
     //traemos los detalles del tramite del servidor
-
-    $("#headerTramiteDetail").text(tramiteSelectedName);
+    $("#headerTramiteDetail",$.mobile.activePage).text(tramiteSelectedName);
 
     loading = true; //interlock to prevent multiple calls
     $.mobile.loading('show');
@@ -208,28 +223,29 @@ $(document).on('vclick', '#search-page-list-view li', function(){
 
             var tramite = data.data;
 
-            $("#queEsId").text(tramite.queEs);
+            $("#queEsId",$.mobile.activePage).text(tramite.queEs);
 
             if (tramite.dondeyCuando!=null)
-                $("#dondeYCuandoId").text(tramite.dondeyCuando.otrosDatosUbicacion);
+                $("#dondeYCuandoId",$.mobile.activePage).text(tramite.dondeyCuando.otrosDatosUbicacion);
             else
-                $("#dondeYCuandoId").text("N/A");
+                $("#dondeYCuandoId",$.mobile.activePage).text("N/A");
 
-            $("#requisitos").text(tramite.requisitos);
+            $("#requisitos",$.mobile.activePage).text(tramite.requisitos);
 
             if (tramite.tenerEnCuenta!=null && tramite.tenerEnCuenta.costo!=null && tramite.tenerEnCuenta.otrosDatosDeInteres!=null && tramite.tenerEnCuenta.formaDeSolicitarlo!=null){
                 var str = "<b>Costo:</b> " + tramite.tenerEnCuenta.costo + "<br>" +
                 "<b>Otros datos:</b> " + tramite.tenerEnCuenta.otrosDatosDeInteres + "<br>" +
                 "<b>Forma de solicitud:</b> " + tramite.tenerEnCuenta.formaDeSolicitarlo;
 
-                $("#observacionesId").html(str);
+                $("#observacionesId",$.mobile.activePage).html(str);
 
                 var depende = "<b> Area </b> : " + tramite.dependeDe.area + "<br>" +
                               "<b> Organismo </b> : " + tramite.dependeDe.organismo;
 
-                $("#dependeDeId").html(depende);
+                $("#dependeDeId",$.mobile.activePage).html(depende);
             }
             loading = false;
             $.mobile.loading('hide');
     });
+    return false;
 });
