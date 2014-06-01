@@ -146,7 +146,7 @@ var fetchDataFromServerRegExp = function(name){
 
 $(window).bind('scrollstart', function () {
 
-  event.preventDefault();
+  //event.preventDefault();
 
   var activePage = $.mobile.activePage.attr("id");
 
@@ -163,12 +163,12 @@ $(window).bind('scrollstart', function () {
     else
         fetchDataFromServerRegExp(info.text);
     }
-    return false;
+    //return false;
 });
 
 $(window).bind('scrollstop', function () {
-  event.preventDefault();
-  return false;
+  //event.preventDefault();
+  //return false;
 });
 
 function isAtBottom(){
