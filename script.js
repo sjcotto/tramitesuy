@@ -7,6 +7,32 @@ var info = {
 var tramiteSelected = null;
 var tramiteSelectedName = null;
 
+var mg = {
+
+    cache: {},
+    init: function(){
+        this.cache.headlineTitle = $("#headlineTitle"),
+        this.cache.movie_data = $("#movie-data"),
+        this.cache.tramiteDetail = $("#tramiteDetail"),
+        this.cache.headerTramiteDetail = $("#headerTramiteDetail"),
+        this.cache.queEsId = $("#queEsId"),
+        this.cache.dondeYCuandoId = $("#dondeYCuandoId"),
+        this.cache.requisitos = $("#requisitos"),
+        this.cache.observacionesId = $("#observacionesId"),
+        this.cache.dependeDeId = $("#dependeDeId"),
+        this.cache.search_page_list_view = $("#search-page-list-view"),
+        this.cache.search_page_list_view = $("#search-page-list-view"),
+        this.cache.btnBuscar = $("#btnBuscar"),
+        this.cache.searchPageTitle = $("#searchPageTitle"),
+        this.cache.search_page_list_view = $("#search-page-list-view"),
+        this.cache.searchTramite = $("#searchTramite")
+    }
+
+}
+
+//inicializamos la cache
+mg.init();
+
  $(document).on("mobileinit", function(){
      $.mobile.buttonMarkup.hoverDelay = 0;
      $.mobile.defaultPageTransition   = 'none';
@@ -22,14 +48,15 @@ $(document).on('vclick', '#movie-list li', function(){
     $.mobile.navigate( "#headline" );
     $.mobile.changePage( "#headline");
 
-    $("#headlineTitle",$.mobile.activePage).text($(this).attr('data-name'));
+    //$("#headlineTitle",$.mobile.activePage).text($(this).attr('data-name'));
+    mg.cache.headlineTitle.text($(this).attr('data-name'));
 
     var idd = $(this).attr('data-id');
 
     info.cat = idd;
     info.page = 0;
 
-    $('#movie-data',$.mobile.activePage).empty();
+    mg.cache.movie_data.empty();
 
     fetchDataFromServer();
     return false;
@@ -50,7 +77,7 @@ $(document).on('vclick', '#movie-data li', function(){
 
     //traemos los detalles del tramite del servidor
 
-    $("#headerTramiteDetail").text(tramiteSelectedName);
+    mg.cache.headerTramiteDetail.text(tramiteSelectedName);
 
     loading = true; //interlock to prevent multiple calls
     $.mobile.loading('show');
@@ -61,26 +88,26 @@ $(document).on('vclick', '#movie-data li', function(){
 
             var tramite = data.data;
 
-            $("#queEsId",$.mobile.activePage).text(tramite.queEs);
+            mg.cache.queEsId.text(tramite.queEs);
 
             if (tramite.dondeyCuando!=null)
-                $("#dondeYCuandoId",$.mobile.activePage).text(tramite.dondeyCuando.otrosDatosUbicacion);
+                mg.cache.dondeYCuandoId.text(tramite.dondeyCuando.otrosDatosUbicacion);
             else
-                $("#dondeYCuandoId",$.mobile.activePage).text("N/A");
+                mg.cache.dondeYCuandoId.text("N/A");
 
-            $("#requisitos",$.mobile.activePage).text(tramite.requisitos);
+            mg.cache.requisitos.text(tramite.requisitos);
 
             if (tramite.tenerEnCuenta!=null && tramite.tenerEnCuenta.costo!=null && tramite.tenerEnCuenta.otrosDatosDeInteres!=null && tramite.tenerEnCuenta.formaDeSolicitarlo!=null){
                 var str = "<b>Costo:</b> " + tramite.tenerEnCuenta.costo + "<br>" +
                 "<b>Otros datos:</b> " + tramite.tenerEnCuenta.otrosDatosDeInteres + "<br>" +
                 "<b>Forma de solicitud:</b> " + tramite.tenerEnCuenta.formaDeSolicitarlo;
 
-                $("#observacionesId",$.mobile.activePage).html(str);
+                mg.cache.observacionesId.html(str);
 
                 var depende = "<b> Area </b> : " + tramite.dependeDe.area + "<br>" +
                               "<b> Organismo </b> : " + tramite.dependeDe.organismo;
 
-                $("#dependeDeId",$.mobile.activePage).html(depende);
+                mg.cache.dependeDeId.html(depende);
             }
             loading = false;
             $.mobile.loading('hide');
@@ -110,7 +137,7 @@ var fetchDataFromServer = function(){
 
             info.page = info.page+1;
              //refresh listview
-            $('#movie-data',$.mobile.activePage).listview('refresh');
+            mg.cache.movie_data.listview('refresh');
             loading = false;
             $.mobile.loading('hide');
     });
@@ -139,7 +166,7 @@ var fetchDataFromServerRegExp = function(name){
 
             info.page = info.page+1;
              //refresh listview
-            $('#search-page-list-view',$.mobile.activePage).listview('refresh');
+            mg.cache.search_page_list_view.listview('refresh');
             loading = false;
             $.mobile.loading('hide');
     });
@@ -178,21 +205,21 @@ function isAtBottom(){
 
 
 $(document).ready(function(){
-  $("#btnBuscar").click(function() {
+    mg.cache.btnBuscar.click(function() {
 
     event.preventDefault();
 
-    var name = $("#searchTramite",$.mobile.activePage).val();
+    var name = mg.cache.searchTramite.val();
 
     $.mobile.navigate( "#searchPage" );
     $.mobile.changePage( "#searchPage");
 
-    $("#searchPageTitle",$.mobile.activePage).text("Resultados para " + name);
+    mg.cache.searchPageTitle.text("Resultados para " + name);
 
     info.text = name;
     info.page = 0;
 
-    $('#search-page-list-view',$.mobile.activePage).empty();
+    mg.cache.search_page_list_view.empty();
     fetchDataFromServerRegExp(name);
     return false;
   });
@@ -213,7 +240,7 @@ $(document).on('vclick', '#search-page-list-view li', function(){
     $.mobile.navigate( "#tramiteDetail" );
 
     //traemos los detalles del tramite del servidor
-    $("#headerTramiteDetail",$.mobile.activePage).text(tramiteSelectedName);
+    mg.cache.headerTramiteDetail.text(tramiteSelectedName);
 
     loading = true; //interlock to prevent multiple calls
     $.mobile.loading('show');
@@ -224,14 +251,14 @@ $(document).on('vclick', '#search-page-list-view li', function(){
 
             var tramite = data.data;
 
-            $("#queEsId",$.mobile.activePage).text(tramite.queEs);
+            mg.cache.queEsId.text(tramite.queEs);
 
             if (tramite.dondeyCuando!=null)
-                $("#dondeYCuandoId",$.mobile.activePage).text(tramite.dondeyCuando.otrosDatosUbicacion);
+                    mg.cache.dondeYCuandoId.text(tramite.dondeyCuando.otrosDatosUbicacion);
             else
-                $("#dondeYCuandoId",$.mobile.activePage).text("N/A");
+                    mg.cache.dondeYCuandoId.text("N/A");
 
-            $("#requisitos",$.mobile.activePage).text(tramite.requisitos);
+            mg.cache.requisitos.text(tramite.requisitos);
 
             if (tramite.tenerEnCuenta!=null && tramite.tenerEnCuenta.costo!=null && tramite.tenerEnCuenta.otrosDatosDeInteres!=null && tramite.tenerEnCuenta.formaDeSolicitarlo!=null){
                 var str = "<b>Costo:</b> " + tramite.tenerEnCuenta.costo + "<br>" +
@@ -243,7 +270,7 @@ $(document).on('vclick', '#search-page-list-view li', function(){
                 var depende = "<b> Area </b> : " + tramite.dependeDe.area + "<br>" +
                               "<b> Organismo </b> : " + tramite.dependeDe.organismo;
 
-                $("#dependeDeId",$.mobile.activePage).html(depende);
+                mg.cache.dependeDeId.html(depende);
             }
             loading = false;
             $.mobile.loading('hide');
