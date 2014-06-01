@@ -1,8 +1,17 @@
+$(document).bind('pageinit', function () {
+    $.mobile.buttonMarkup.hoverDelay = 0;
+    $.mobile.defaultPageTransition   = 'none';
+    $.mobile.defaultDialogTransition = 'none';
+    $.event.special.swipe.scrollSupressionThreshold = 100;
+});
+
 var info = {
     cat : null,
     page : null,
     text: null
 }
+
+$.fx.off = true;
 
 var tramiteSelected = null;
 var tramiteSelectedName = null;
@@ -35,14 +44,7 @@ var mg = {
 //inicializamos la cache
 mg.init();
 
-$(document).bind('pageinit', function () {
-    event.preventDefault();
-    $.mobile.buttonMarkup.hoverDelay = 0;
-    $.mobile.defaultPageTransition   = 'none';
-    $.mobile.defaultDialogTransition = 'none';
-    $.event.special.swipe.scrollSupressionThreshold = 100;
-    return false;
-});
+
 
 $(document).on('vclick', '#movie-list li', function(){
 
