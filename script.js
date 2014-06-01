@@ -7,11 +7,12 @@ var info = {
 var tramiteSelected = null;
 var tramiteSelectedName = null;
 
-// $(document).on("mobileinit", function(){
-//     $.mobile.buttonMarkup.hoverDelay = 0;
-//     $.mobile.defaultPageTransition   = 'none';
-//     $.mobile.defaultDialogTransition = 'none';
-// });
+ $(document).on("mobileinit", function(){
+     $.mobile.buttonMarkup.hoverDelay = 0;
+     $.mobile.defaultPageTransition   = 'none';
+     $.mobile.defaultDialogTransition = 'none';
+     $.event.special.swipe.scrollSupressionThreshold = 100;
+ });
 
 
 $(document).on('vclick', '#movie-list li', function(){
