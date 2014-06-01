@@ -35,13 +35,14 @@ var mg = {
 //inicializamos la cache
 mg.init();
 
- $(document).on("mobileinit", function(){
-     $.mobile.buttonMarkup.hoverDelay = 0;
-     $.mobile.defaultPageTransition   = 'none';
-     $.mobile.defaultDialogTransition = 'none';
-     $.event.special.swipe.scrollSupressionThreshold = 100;
- });
-
+$(document).bind('pageinit', function () {
+    event.preventDefault();
+    $.mobile.buttonMarkup.hoverDelay = 0;
+    $.mobile.defaultPageTransition   = 'none';
+    $.mobile.defaultDialogTransition = 'none';
+    $.event.special.swipe.scrollSupressionThreshold = 100;
+    return false;
+});
 
 $(document).on('vclick', '#movie-list li', function(){
 
@@ -50,7 +51,6 @@ $(document).on('vclick', '#movie-list li', function(){
     $.mobile.navigate( "#headline" );
     $.mobile.changePage( "#headline");
 
-    //$("#headlineTitle",$.mobile.activePage).text($(this).attr('data-name'));
     mg.cache.headlineTitle.text($(this).attr('data-name'));
 
     var idd = $(this).attr('data-id');
@@ -74,14 +74,11 @@ $(document).on('vclick', '#movie-data li', function(){
     var name = $(this).attr('data-name');
     tramiteSelectedName = name;
 
-    //$.mobile.changePage( "#tramiteDetail", { transition: "slide", changeHash: false });
     $.mobile.navigate( "#tramiteDetail" );
-
-    //traemos los detalles del tramite del servidor
 
     mg.cache.headerTramiteDetail.text(tramiteSelectedName);
 
-    loading = true; //interlock to prevent multiple calls
+    loading = true;
     $.mobile.loading('show');
 
     var url = 'http://developer.konacloud.io/api/taio/TramitesUY/r_getTramiteById?id='+tramiteSelected;
