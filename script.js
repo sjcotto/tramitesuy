@@ -11,23 +11,25 @@ var mg = {
 
     cache: {},
     init: function(){
-        this.cache.headlineTitle = $("#headlineTitle"),
-        this.cache.movie_data = $("#movie-data"),
-        this.cache.tramiteDetail = $("#tramiteDetail"),
-        this.cache.headerTramiteDetail = $("#headerTramiteDetail"),
-        this.cache.queEsId = $("#queEsId"),
-        this.cache.dondeYCuandoId = $("#dondeYCuandoId"),
-        this.cache.requisitos = $("#requisitos"),
-        this.cache.observacionesId = $("#observacionesId"),
-        this.cache.dependeDeId = $("#dependeDeId"),
-        this.cache.search_page_list_view = $("#search-page-list-view"),
-        this.cache.search_page_list_view = $("#search-page-list-view"),
-        this.cache.btnBuscar = $("#btnBuscar"),
-        this.cache.searchPageTitle = $("#searchPageTitle"),
-        this.cache.search_page_list_view = $("#search-page-list-view"),
-        this.cache.searchTramite = $("#searchTramite")
-    }
 
+        console.log("init start " + (new Date()).getTime());
+        this.cache.headlineTitle = $("#headlineTitle");
+        this.cache.movie_data = $("#movie-data");
+        this.cache.tramiteDetail = $("#tramiteDetail");
+        this.cache.headerTramiteDetail = $("#headerTramiteDetail");
+        this.cache.queEsId = $("#queEsId");
+        this.cache.dondeYCuandoId = $("#dondeYCuandoId");
+        this.cache.requisitos = $("#requisitos");
+        this.cache.observacionesId = $("#observacionesId");
+        this.cache.dependeDeId = $("#dependeDeId");
+        this.cache.search_page_list_view = $("#search-page-list-view");
+        this.cache.search_page_list_view = $("#search-page-list-view");
+        this.cache.btnBuscar = $("#btnBuscar");
+        this.cache.searchPageTitle = $("#searchPageTitle");
+        this.cache.search_page_list_view = $("#search-page-list-view");
+        this.cache.searchTramite = $("#searchTramite");
+        console.log("init end "+(new Date()).getTime());
+    }
 }
 
 //inicializamos la cache
@@ -119,7 +121,6 @@ $(document).on('vclick', '#movie-data li', function(){
 var fetchDataFromServer = function(){
     $.getJSON('http://developer.konacloud.io/api/taio/TramitesUY/mr_tramiteCats?cat='+info.cat+"&p="+info.page , function(data) {
 
-
             var array = data.data;
             array.forEach(function(entry) {
                 var tramTitle = entry.titulo;
@@ -205,24 +206,29 @@ function isAtBottom(){
 
 
 $(document).ready(function(){
-    mg.cache.btnBuscar.click(function() {
 
     event.preventDefault();
+    mg.cache.btnBuscar.click(function() {
 
-    var name = mg.cache.searchTramite.val();
+      event.preventDefault();
 
-    $.mobile.navigate( "#searchPage" );
-    $.mobile.changePage( "#searchPage");
+      //console.log($("#searchTramite"))
+      var name = $("#searchTramite").val();
+      //console.log(name);
 
-    mg.cache.searchPageTitle.text("Resultados para " + name);
+      $.mobile.navigate( "#searchPage" );
+      $.mobile.changePage( "#searchPage");
 
-    info.text = name;
-    info.page = 0;
+      mg.cache.searchPageTitle.text("Resultados para " + name);
 
-    mg.cache.search_page_list_view.empty();
-    fetchDataFromServerRegExp(name);
-    return false;
+      info.text = name;
+      info.page = 0;
+
+      mg.cache.search_page_list_view.empty();
+      fetchDataFromServerRegExp(name);
+      return false;
   });
+  return false;
 
 });
 
